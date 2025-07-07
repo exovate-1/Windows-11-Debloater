@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exovate - Windows 11 Ultimate Debloater</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --glow-color-1: #0ea5e9; /* sky-500 */
+            --glow-color-2: #8b5cf6; /* violet-500 */
+            --bg-color-1: #0c0a18;
+            --bg-color-2: #1e1b2e;
+            --bg-color-3: #1f2937;
+        }
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(-45deg, var(--bg-color-1), var(--bg-color-2), var(--bg-color-3), var(--bg-color-1));
+            background-size: 400% 400%;
+            animation: gradient-animation 25s ease infinite;
+            color: #e5e7eb;
+        }
+        .font-fira-code {
+            font-family: 'Fira Code', monospace;
+        }
+        .liquid-glass {
+            background: rgba(17, 24, 39, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        .exovate-title {
+            color: var(--glow-color-1);
+            text-shadow: 0 0 5px var(--glow-color-1), 0 0 10px var(--glow-color-2);
+        }
+        .glow-border {
+            border-image: linear-gradient(to right, var(--glow-color-1), var(--glow-color-2)) 1;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 28px;
+        }
+        .switch input { display: none; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(255,255,255,0.2);
+            transition: .4s;
+            border-radius: 28px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px; width: 20px;
+            left: 4px; bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background: linear-gradient(90deg, var(--glow-color-1), var(--glow-color-2));
+        }
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .collapsible-header {
+            cursor: pointer;
+        }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden; width: 240px; background-color: #1f2937; color: #fff; text-align: center;
+            border-radius: 6px; padding: 8px; position: absolute; z-index: 1; bottom: 125%; left: 50%;
+            margin-left: -120px; opacity: 0; transition: opacity 0.3s; font-size: 0.8rem;
+        }
+        .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(139, 92, 246, 0.5); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(139, 92, 246, 0.8); }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-screen-xl mx-auto">
+        <header class="text-center mb-10 font-fira-code">
+            <pre class="exovate-title text-xs md:text-sm leading-tight whitespace-pre">
+███████╗██╗   ██╗ ██████╗  ██████╗  █████╗ ████████╗███████╗
+██╔════╝╚██╗ ██╔╝██╔═══██╗██╔═══██╗██╔══██╗╚══██╔══╝██╔════╝
+█████╗   ╚████╔╝ ██║   ██║██║   ██║███████║   ██║   █████╗
+██╔══╝    ╚██╔╝  ██║   ██║██║   ██║██╔══██║   ██║   ██╔══╝
+███████╗   ██║   ╚██████╔╝╚██████╔╝██║  ██║   ██║   ███████╗
+╚══════╝   ╚═╝    ╚═════╝  ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚══════╝</pre>
+            <p class="text-white mt-2 text-lg">EXOVATE By Aakesh</p>
+        </header>
+
+        <main class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Options Panel -->
+            <div class="liquid-glass p-6 rounded-2xl">
+                <h2 class="text-3xl font-bold mb-6 border-b-2 glow-border pb-3">Customization Matrix</h2>
+                
+                <!-- Presets Section -->
+                <div class="mb-6">
+                    <h3 class="text-xl font-semibold mb-3 text-violet-300">Load a Preset Profile</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <button onclick="applyPreset('safe')" class="bg-green-600/80 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg transition-all">Safe</button>
+                        <button onclick="applyPreset('gaming')" class="bg-purple-600/80 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-lg transition-all">Gaming</button>
+                        <button onclick="applyPreset('lightweight')" class="bg-sky-600/80 hover:bg-sky-600 text-white font-bold py-2 px-4 rounded-lg transition-all">Lightweight</button>
+                        <button onclick="applyPreset('performance')" class="bg-red-600/80 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition-all">Performance</button>
+                    </div>
+                     <div class="mt-3">
+                        <button onclick="applyPreset('reset')" class="w-full bg-gray-600/80 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-all">Reset All Options</button>
+                    </div>
+                </div>
+
+                <div id="options-container" class="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
+                    <!-- Categories will be injected here by JS -->
+                </div>
+            </div>
+
+            <!-- Script Output Panel -->
+            <div class="liquid-glass p-6 rounded-2xl flex flex-col">
+                <h2 class="text-3xl font-bold mb-6 border-b-2 glow-border pb-3">Generated Powershell Script</h2>
+                <div class="flex-grow bg-black/30 rounded-lg p-4 overflow-auto relative" style="min-height: 400px;">
+                    <pre class="text-sm"><code id="generatedScript">Select options or a preset, then click 'Generate Script'...</code></pre>
+                </div>
+                <div class="mt-6 flex flex-col sm:flex-row gap-4">
+                    <button onclick="generateScript()" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 px-4 rounded-lg transition-all duration-300 shadow-[0_0_15px_rgba(14,165,233,0.5)] hover:shadow-[0_0_25px_rgba(14,165,233,0.8)]">
+                        Generate Script
+                    </button>
+                    <button id="copyButton" onclick="copyScript()" class="w-full bg-violet-600 hover:bg-violet-700 text-white font-bold py-3 px-4 rounded-lg transition-all duration-300 shadow-[0_0_15px_rgba(139,92,246,0.5)] hover:shadow-[0_0_25px_rgba(139,92,246,0.8)]" disabled>
+                        Copy to Clipboard
+                    </button>
+                    <button id="downloadButton" onclick="downloadScript()" class="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded-lg transition-colors" disabled>
+                        Download .ps1
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const optionsData = {
+            "Core System & Setup": {
+                icon: "⚙️", color: "sky", options: [
+                    { id: "createRestorePoint", label: "Create System Restore Point", desc: "Crucial safety net before applying changes. Highly Recommended.", checked: true },
+                    { id: "enableLongPaths", label: "Enable Long Path Support", desc: "Allows file paths longer than 260 characters, useful for developers.", checked: true },
+                    { id: "disableHibernation", label: "Disable Hibernation", desc: "Saves significant disk space by removing hiberfil.sys.", checked: false },
+                    { id: "uninstallOneDrive", label: "Completely Uninstall OneDrive", desc: "Removes the OneDrive client and integration.", checked: false },
+                    { id: "disableStorageSense", label: "Disable Storage Sense", desc: "Prevents Windows from automatically deleting files.", checked: true },
+                    { id: "disableErrorReporting", label: "Disable Windows Error Reporting", desc: "Stops the 'program has stopped working' popups.", checked: false },
+                    { id: "preventStoreReinstall", label: "Prevent Store App Reinstalls", desc: "Stops Windows from reinstalling certain removed apps after an update.", checked: true },
+                    { id: "disableDriverAutoUpdates", label: "Disable Automatic Driver Updates", desc: "Prevents Windows Update from replacing your installed drivers.", checked: false },
+                    { id: "setComputerName", label: "Set Computer Name (Requires Prompt)", desc: "Adds a prompt to the script to rename your PC.", checked: false },
+                    { id: "disableFSTips", label: "Disable File System Tips", desc: "Disables notifications about file system usage.", checked: true }
+                ]
+            },
+            "App & Feature Removal": {
+                icon: "🗑️", color: "red", options: [
+                    { id: "removeSafeBloat", label: "Remove Common Bloatware", desc: "Removes apps like Clipchamp, 3D Viewer, Office Hub, Solitaire, etc.", checked: true },
+                    { id: "removeXbox", label: "Remove ALL Xbox Apps", desc: "Removes Game Bar, Identity Provider, etc. May break some MS Store games.", checked: false },
+                    { id: "removeCommunications", label: "Remove Mail, People, Skype", desc: "Removes built-in communication apps.", checked: false },
+                    { id: "removeMediaApps", label: "Remove Old Media Apps", desc: "Removes legacy apps like Zune, Media Player.", checked: false },
+                    { id: "removeEdge", label: "Force Remove Microsoft Edge", desc: "Aggressively removes Edge. Use with caution, can affect system functions.", checked: false },
+                    { id: "removePDFWriter", label: "Remove 'Microsoft Print to PDF'", desc: "Removes the built-in virtual PDF printer.", checked: false },
+                    { id: "removeXPSWriter", label: "Remove 'Microsoft XPS Document Writer'", desc: "Removes the built-in virtual XPS printer.", checked: false },
+                    { id: "removeQuickAssist", label: "Remove Quick Assist", desc: "Removes the remote assistance tool.", checked: true },
+                    { id: "removeIE11", label: "Remove Internet Explorer 11", desc: "Removes the legacy IE11 browser components.", checked: true },
+                    { id: "removeMathPanel", label: "Remove Math Input Panel", desc: "Removes the tool for writing mathematical formulas.", checked: true }
+                ]
+            },
+            "Privacy & Telemetry": {
+                icon: "🔒", color: "yellow", options: [
+                    { id: "disableTelemetry", label: "Disable Core Telemetry Services", desc: "Disables DiagTrack and related data collection services.", checked: true },
+                    { id: "disableAds", label: "Disable Ads, Tips & Suggestions", desc: "Removes personalized ads, lock screen tips, and suggestions in Start/Settings.", checked: true },
+                    { id: "disableBing", label: "Disable Bing in Start Menu Search", desc: "Prevents web results from appearing in local searches.", checked: true },
+                    { id: "disableCopilotRecall", label: "Disable Copilot & Recall (AI)", desc: "Turns off Windows Copilot and the new Recall snapshot feature.", checked: true },
+                    { id: "disableActivityHistory", label: "Disable Activity History", desc: "Stops Windows from collecting your activity history for Timeline.", checked: true },
+                    { id: "disableLocationTracking", label: "Disable Location Tracking", desc: "Turns off the global location service for all users.", checked: false },
+                    { id: "disableAdvertisingID", label: "Disable Advertising ID", desc: "Prevents apps from using your unique advertising ID.", checked: true },
+                    { id: "disableAppLaunchTracking", label: "Disable App Launch Tracking", desc: "Stops Windows from tracking which applications you open.", checked: true },
+                    { id: "disableTailoredExperiences", label: "Disable Tailored Experiences", desc: "Disables personalized experiences based on your diagnostic data.", checked: true },
+                    { id: "disableFeedback", label: "Disable Feedback Notifications", desc: "Stops Windows from asking you for feedback.", checked: true }
+                ]
+            },
+            "Performance & Gaming": {
+                icon: "🚀", color: "purple", options: [
+                    { id: "ultimatePerformance", label: "Enable Ultimate Performance Power Plan", desc: "Unlocks the highest performance power plan for desktops.", checked: false },
+                    { id: "disableSysMain", label: "Disable Superfetch/SysMain", desc: "May improve performance on systems with SSDs.", checked: false },
+                    { id: "disableSearchIndex", label: "Disable Search Indexing Service", desc: "Frees up resources if you don't use Windows Search frequently. Can slow down searches.", checked: false },
+                    { id: "disableFastStartup", label: "Disable Fast Startup", desc: "Ensures a full shutdown, which can prevent driver issues.", checked: true },
+                    { id: "disableGameDVR", label: "Disable Xbox Game Bar & DVR", desc: "Frees up gaming resources and stops background recording.", checked: false },
+                    { id: "optimizeVisualFX", label: "Optimize Visual Effects for Performance", desc: "Disables animations and shadows for a snappier UI.", checked: false },
+                    { id: "disablePowerThrottling", label: "Disable Power Throttling", desc: "Prevents Windows from throttling background applications to save power.", checked: false },
+                    { id: "disableSpectreMeltdown", label: "Disable Spectre & Meltdown Patches", desc: "Recovers performance on older CPUs. Carries a security risk.", checked: false },
+                    { id: "prioritizeForeground", label: "Prioritize Foreground Apps", desc: "Adjusts processor scheduling to favor the active application.", checked: true },
+                    { id: "disablePrefetch", label: "Disable Prefetcher", desc: "Completely disables the prefetcher service.", checked: false }
+                ]
+            },
+            "UI & Experience": {
+                icon: "🎨", color: "green", options: [
+                    { id: "enableDarkMode", label: "Enable System-Wide Dark Mode", desc: "Sets both apps and the system shell to dark mode.", checked: true },
+                    { id: "classicMenu", label: "Restore Classic Context Menu", desc: "Brings back the full right-click menu, removing the 'Show more options' step.", checked: true },
+                    { id: "taskbarLeft", label: "Align Taskbar to Left", desc: "Moves the taskbar icons to the familiar bottom-left position.", checked: true },
+                    { id: "hideTaskbarIcons", label: "Hide Extra Taskbar Icons", desc: "Hides the Chat, Widgets, and Task View icons.", checked: true },
+                    { id: "hideRecommended", label: "Hide 'Recommended' in Start Menu", desc: "Removes the recommended files and apps section for a cleaner Start Menu.", checked: true },
+                    { id: "disableStickyKeys", label: "Disable Sticky Keys Shortcut", desc: "Prevents the Sticky Keys popup from appearing when Shift is pressed 5 times.", checked: true },
+                    { id: "disableMouseAcceleration", label: "Disable Mouse Acceleration", desc: "Provides raw mouse input, preferred by many gamers.", checked: false },
+                    { id: "showFileExtensions", label: "Show Known File Extensions", desc: "Makes file types visible (e.g., .txt, .exe). Important for security.", checked: true },
+                    { id: "showHiddenFiles", label: "Show Hidden Files & Folders", desc: "Makes system and hidden files visible in File Explorer.", checked: false },
+                    { id: "disableLockScreenBlur", label: "Disable Lock Screen Blur", desc: "Removes the acrylic blur effect on the login screen for a clearer background.", checked: false }
+                ]
+            },
+            "Security & Hardening": {
+                icon: "🛡️", color: "red", options: [
+                    { id: "enableControlledFolderAccess", label: "Enable Controlled Folder Access", desc: "Helps protect your files from ransomware. May require whitelisting apps.", checked: false },
+                    { id: "disableSMBv1", label: "Disable SMBv1 Protocol", desc: "Disables the insecure and outdated SMBv1 file sharing protocol.", checked: true },
+                    { id: "disablePowerShellV2", label: "Disable PowerShell v2", desc: "Removes the obsolete and less secure version of PowerShell.", checked: true },
+                    { id: "enableSmartScreen", label: "Enable SmartScreen for Apps & Files", desc: "Strengthens protection against unrecognized apps and files.", checked: true },
+                    { id: "disableAutorun", label: "Disable AutoRun", desc: "Prevents automatic execution of content from removable drives.", checked: true },
+                    { id: "disableRemoteAssistance", label: "Disable Remote Assistance", desc: "Turns off the ability for others to offer remote assistance.", checked: false },
+                    { id: "enableAuditProcessCreation", label: "Enable Audit Process Creation", desc: "Logs all process creation events, useful for security analysis.", checked: false },
+                    { id: "disableLMHash", label: "Disable LanMan Hash Storage", desc: "Improves password security by disabling an old hashing method.", checked: true },
+                    { id: "hardenTCP_IP", label: "Harden TCP/IP Stack", desc: "Protects against certain types of network attacks.", checked: false },
+                    { id: "disableGuestAccount", label: "Disable Guest Account", desc: "Ensures the built-in Guest account is disabled.", checked: true }
+                ]
+            },
+            "Network & Connectivity": {
+                icon: "🌐", color: "blue", options: [
+                    { id: "flushDNS", label: "Flush DNS Cache", desc: "Clears the DNS resolver cache.", checked: false },
+                    { id: "resetTCP_IP", label: "Reset TCP/IP Stack", desc: "Resets network settings to their defaults, can fix connectivity issues.", checked: false },
+                    { id: "disableNetBIOS", label: "Disable NetBIOS over TCP/IP", desc: "Reduces network attack surface on legacy protocols.", checked: false },
+                    { id: "disableLLMNR", label: "Disable LLMNR", desc: "Prevents LLMNR poisoning attacks by disabling a legacy name resolution protocol.", checked: true },
+                    { id: "disableNetworkDiscovery", label: "Disable Network Discovery", desc: "Makes your PC invisible to other devices on the network.", checked: false },
+                    { id: "setGoogleDNS", label: "Set DNS to Google (8.8.8.8)", desc: "Changes your DNS servers to Google's public DNS.", checked: false },
+                    { id: "setCloudflareDNS", label: "Set DNS to Cloudflare (1.1.1.1)", desc: "Changes your DNS servers to Cloudflare's privacy-focused DNS.", checked: false },
+                    { id: "disableIPv6", label: "Disable IPv6", desc: "Disables the IPv6 protocol. Warning: May break some applications.", checked: false },
+                    { id: "optimizeNetwork", label: "Apply Network Optimizations (Gaming)", desc: "Disables TCP auto-tuning and other settings for potentially lower latency.", checked: false },
+                    { id: "showWifiPassword", label: "Show Current WiFi Password", desc: "Adds a command to display the password of the currently connected WiFi network.", checked: false }
+                ]
+            },
+            "Developer & Power User": {
+                icon: "💻", color: "yellow", options: [
+                    { id: "installWSL", label: "Install WSL (Windows Subsystem for Linux)", desc: "Installs the WSL platform for running Linux environments.", checked: false },
+                    { id: "enableHyperV", label: "Enable Hyper-V Platform", desc: "Enables Microsoft's native hypervisor for virtual machines.", checked: false },
+                    { id: "enableSandbox", label: "Enable Windows Sandbox", desc: "Enables a lightweight, isolated desktop environment for testing.", checked: false },
+                    { id: "enableDeveloperMode", label: "Enable Developer Mode", desc: "Enables settings required for app development and sideloading.", checked: false },
+                    { id: "addTakeOwnership", label: "Add 'Take Ownership' to Context Menu", desc: "A powerful shortcut for taking control of files and folders.", checked: false },
+                    { id: "addPowerShellHere", label: "Add 'Open PowerShell Here' Context Menu", desc: "Adds a convenient shortcut to open PowerShell in the current folder.", checked: true },
+                    { id: "disableUAC", label: "Disable UAC (User Account Control)", desc: "Disables UAC prompts. Warning: Significant security risk.", checked: false },
+                    { id: "showGodMode", label: "Create 'God Mode' on Desktop", desc: "Creates a folder with access to all control panel settings.", checked: false },
+                    { id: "installChocolatey", label: "Install Chocolatey Package Manager", desc: "Installs the popular command-line package manager for Windows.", checked: false },
+                    { id: "updateWinget", label: "Update Winget Package Manager", desc: "Ensures the built-in Winget package manager is up to date.", checked: true }
+                ]
+            },
+            "Services Management": {
+                icon: "🔧", color: "purple", options: [
+                    { id: "disablePrintSpooler", label: "Disable Print Spooler Service", desc: "Disable if you do not use printers. Good for security.", checked: false },
+                    { id: "disableFaxService", label: "Disable Fax Service", desc: "Disables the legacy fax service.", checked: true },
+                    { id: "disableRemoteRegistry", label: "Disable Remote Registry Service", desc: "Improves security by preventing remote registry modification.", checked: true },
+                    { id: "disableTouchKeyboardSvc", label: "Disable Touch Keyboard Service", desc: "Disable on desktops without a touch screen.", checked: false },
+                    { id: "disableBluetoothSvc", label: "Disable Bluetooth Service", desc: "Disable if you do not use any Bluetooth devices.", checked: false },
+                    { id: "disableAllJoynRouterSvc", label: "Disable AllJoyn Router Service", desc: "Service for communicating with IoT devices.", checked: true },
+                    { id: "disableGeolocationSvc", label: "Disable Geolocation Service", desc: "Disables system-wide location tracking service.", checked: false },
+                    { id: "disableWalletSvc", label: "Disable WalletService", desc: "Service for Microsoft Pay and wallet features.", checked: true },
+                    { id: "disablePhoneSvc", label: "Disable Phone Service", desc: "Service for telephony control on the device.", checked: true },
+                    { id: "disableDiagnosticPolicySvc", label: "Disable Diagnostic Policy Service", desc: "Disables the service that detects and troubleshoots problems.", checked: false }
+                ]
+            },
+            "System Cleanup & Maintenance": {
+                icon: "🧹", color: "green", options: [
+                    { id: "clearTempFiles", label: "Clear All Temp Files", desc: "Clears user and system temporary folders.", checked: false },
+                    { id: "clearRecycleBin", label: "Empty Recycle Bin", desc: "Force-empties the Recycle Bin for all users.", checked: false },
+                    { id: "clearSoftwareDistribution", label: "Clear Windows Update Cache", desc: "Clears the SoftwareDistribution folder to fix update issues.", checked: false },
+                    { id: "runDiskCleanup", label: "Run Full Disk Cleanup", desc: "Runs the built-in Disk Cleanup utility with all options automated.", checked: false },
+                    { id: "resetStoreCache", label: "Reset Microsoft Store Cache", desc: "Runs 'wsreset.exe' to clear the Store's cache.", checked: false },
+                    { id: "runSFC", label: "Run System File Checker (SFC)", desc: "Scans and repairs protected system files.", checked: false },
+                    { id: "runDISMHealth", label: "Run DISM Component Store Repair", desc: "Scans and repairs the Windows component store.", checked: false },
+                    { id: "clearIconCache", label: "Rebuild Icon Cache", desc: "Fixes issues with incorrect or broken icons.", checked: false },
+                    { id: "clearFontCache", label: "Rebuild Font Cache", desc: "Fixes issues with fonts not displaying correctly.", checked: false },
+                    { id: "defragmentAllDrives", label: "Defragment & Optimize All Drives", desc: "Runs the standard Windows drive optimization tool.", checked: false }
+                ]
+            }
+        };
+
+        // --- UI Generation & Interaction ---
+        function createOptionHTML(opt) {
+            return `<div class="option-item flex justify-between items-center py-3 border-b border-white/10"><div class="flex items-center"><label for="${opt.id}" class="flex-grow cursor-pointer">${opt.label}</label><div class="tooltip ml-2"><span class="text-xs text-sky-400 cursor-help">(?)</span><span class="tooltiptext">${opt.desc}</span></div></div><label class="switch"><input type="checkbox" id="${opt.id}" ${opt.checked ? 'checked' : ''}><span class="slider"></span></label></div>`;
+        }
+        function createCategoryHTML(title, data) {
+            const optionsHTML = data.options.map(createOptionHTML).join('');
+            return `<div class="collapsible-container bg-black/20 rounded-lg"><div class="collapsible-header flex justify-between items-center p-4"><h3 class="text-xl font-semibold text-${data.color}-400">${data.icon} ${title}</h3><span class="text-2xl transform transition-transform duration-300 text-${data.color}-400">+</span></div><div class="collapsible-content px-4 pb-2">${optionsHTML}</div></div>`;
+        }
+        const optionsContainer = document.getElementById('options-container');
+        optionsContainer.innerHTML = Object.entries(optionsData).map(([title, data]) => createCategoryHTML(title, data)).join('');
+        document.querySelectorAll('.collapsible-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const content = header.nextElementSibling;
+                const icon = header.querySelector('span');
+                const isOpen = content.style.maxHeight;
+                document.querySelectorAll('.collapsible-content').forEach(c => c.style.maxHeight = null);
+                document.querySelectorAll('.collapsible-header span').forEach(i => i.style.transform = 'rotate(0deg)');
+                if (!isOpen) {
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                    icon.style.transform = 'rotate(45deg)';
+                }
+            });
+        });
+
+        function setOption(id, value) {
+            const el = document.getElementById(id);
+            if (el) el.checked = value;
+        }
+
+        function applyPreset(preset) {
+            // Reset all to false first
+            document.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
+
+            const presets = {
+                safe: ["createRestorePoint", "enableLongPaths", "disableStorageSense", "preventStoreReinstall", "disableFSTips", "removeSafeBloat", "removeQuickAssist", "removeIE11", "removeMathPanel", "disableTelemetry", "disableAds", "disableBing", "disableCopilotRecall", "disableActivityHistory", "disableAdvertisingID", "disableAppLaunchTracking", "disableTailoredExperiences", "disableFeedback", "disableFastStartup", "prioritizeForeground", "enableDarkMode", "classicMenu", "taskbarLeft", "hideTaskbarIcons", "hideRecommended", "disableStickyKeys", "showFileExtensions", "disableSMBv1", "disablePowerShellV2", "enableSmartScreen", "disableAutorun", "disableLMHash", "disableGuestAccount", "disableLLMNR", "addPowerShellHere", "updateWinget", "disableFaxService", "disableRemoteRegistry", "disableAllJoynRouterSvc", "disableWalletSvc", "disablePhoneSvc"],
+                gaming: ["uninstallOneDrive", "removeXbox", "ultimatePerformance", "disableGameDVR", "disableMouseAcceleration", "optimizeNetwork", "disablePowerThrottling", "disablePrefetch"],
+                lightweight: ["disableHibernation", "removeCommunications", "removeMediaApps", "removePDFWriter", "removeXPSWriter", "disableSearchIndex", "optimizeVisualFX", "disablePrintSpooler", "disableTouchKeyboardSvc", "disableBluetoothSvc", "disableGeolocationSvc", "disableDiagnosticPolicySvc"],
+                performance: ["disableSysMain", "disableSpectreMeltdown"],
+                reset: []
+            };
+
+            let optionsToSet = new Set();
+            if (preset === 'safe') {
+                presets.safe.forEach(id => optionsToSet.add(id));
+            } else if (preset === 'gaming') {
+                [...presets.safe, ...presets.gaming].forEach(id => optionsToSet.add(id));
+            } else if (preset === 'lightweight') {
+                [...presets.safe, ...presets.lightweight].forEach(id => optionsToSet.add(id));
+            } else if (preset === 'performance') {
+                [...presets.safe, ...presets.gaming, ...presets.lightweight, ...presets.performance].forEach(id => optionsToSet.add(id));
+            }
+            
+            optionsToSet.forEach(id => setOption(id, true));
+            generateScript();
+        }
+
+
+        // --- Script Generation & Handling ---
+        function getOption(id) { return document.getElementById(id).checked; }
+        function copyScript() {
+            navigator.clipboard.writeText(document.getElementById('generatedScript').textContent).then(() => {
+                const btn = document.getElementById('copyButton');
+                btn.textContent = 'Copied!';
+                setTimeout(() => { btn.textContent = 'Copy to Clipboard'; }, 2000);
+            });
+        }
+        function downloadScript() {
+            const blob = new Blob([document.getElementById('generatedScript').textContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Exovate_Script.ps1';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function generateScript() {
+            const asciiArt = `
+Write-Host @"
+███████╗██╗   ██╗ ██████╗  ██████╗  █████╗ ████████╗███████╗
+██╔════╝╚██╗ ██╔╝██╔═══██╗██╔═══██╗██╔══██╗╚══██╔══╝██╔════╝
+█████╗   ╚████╔╝ ██║   ██║██║   ██║███████║   ██║   █████╗
+██╔══╝    ╚██╔╝  ██║   ██║██║   ██║██╔══██║   ██║   ██╔══╝
+███████╗   ██║   ╚██████╔╝╚██████╔╝██║  ██║   ██║   ███████╗
+╚══════╝   ╚═╝    ╚═════╝  ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚══════╝
+"@ -ForegroundColor Cyan
+Write-Host "          EXOVATE By Aakesh" -ForegroundColor White
+Write-Host "=======================================================================" -ForegroundColor DarkGray
+Write-Host ""
+`;
+
+            const commands = {
+                createRestorePoint: `Invoke-Tweak -Name "Create System Restore Point" -ScriptBlock { Checkpoint-Computer -Description "Exovate Pre-Debloat Restore Point" -RestorePointType "MODIFY_SETTINGS" }`,
+                enableLongPaths: `Invoke-Tweak -Name "Enable Long Path Support" -ScriptBlock { Set-ItemProperty -Path "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\FileSystem" -Name "LongPathsEnabled" -Value 1 -Type DWord -Force }`,
+                disableHibernation: `Invoke-Tweak -Name "Disable Hibernation" -ScriptBlock { powercfg /hibernate off }`,
+                uninstallOneDrive: `Invoke-Tweak -Name "Uninstall OneDrive" -ScriptBlock { if (Test-Path "$env:SystemRoot\\SysWOW64\\OneDriveSetup.exe") { Start-Process "$env:SystemRoot\\SysWOW64\\OneDriveSetup.exe" -ArgumentList "/uninstall" -Wait }; if (Test-Path "$env:SystemRoot\\System32\\OneDriveSetup.exe") { Start-Process "$env:SystemRoot\\System32\\OneDriveSetup.exe" -ArgumentList "/uninstall" -Wait } }`,
+                disableStorageSense: `Invoke-Tweak -Name "Disable Storage Sense" -ScriptBlock { Set-ItemProperty -Path "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\StorageSense\\Parameters\\StoragePolicy" -Name "01" -Value 0 -Type DWord -Force }`,
+                disableErrorReporting: `Invoke-Tweak -Name "Disable Error Reporting" -ScriptBlock { Set-ItemProperty -Path "HKLM:\\SOFTWARE\\Microsoft\\Windows\\Windows Error Reporting" -Name "Disabled" -Value 1 -Type DWord -Force }`,
+                preventStoreReinstall: `Invoke-Tweak -Name "Prevent Store App Reinstalls" -ScriptBlock { Set-ItemProperty -Path "HKLM:\\SOFTWARE\\Policies\\Microsoft\\WindowsStore" -Name "AutoDownload" -Value 2 -Type DWord -Force }`,
+                disableDriverAutoUpdates: `Invoke-Tweak -Name "Disable Automatic Driver Updates" -ScriptBlock { Set-ItemProperty -Path "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate" -Name "ExcludeWUDriversInQualityUpdate" -Value 1 -Type DWord -Force }`,
+                setComputerName: `Invoke-Tweak -Name "Set Computer Name" -ScriptBlock { $newName = Read-Host -Prompt "Enter the new computer name"; Rename-Computer -NewName $newName -Force -Restart }`,
+                disableFSTips: `Invoke-Tweak -Name "Disable File System Tips" -ScriptBlock { Set-ItemProperty -Path "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\UserProtectedData\\AnyoneRead\\User\\shell\\Tips" -Name "Enabled" -Value 0 -Type DWord -Force }`,
+                removeSafeBloat: `Invoke-Tweak -Name "Remove Common Bloatware" -ScriptBlock { $apps = @('*Clipchamp*','*3DBuilder*','*OfficeHub*','*SolitaireCollection*','*ZuneVideo*'); foreach ($app in $apps) { Get-AppxPackage $app -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue } }`,
+                removeXbox: `Invoke-Tweak -Name "Remove ALL Xbox Apps" -ScriptBlock { Get-AppxPackage *xbox* -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue }`,
+                removeCommunications: `Invoke-Tweak -Name "Remove Communication Apps" -ScriptBlock { Get-AppxPackage *skype* -AllUsers | Remove-AppxPackage -AllUsers; Get-AppxPackage *people* -AllUsers | Remove-AppxPackage -AllUsers; Get-AppxPackage *windowscommunicationsapps* -AllUsers | Remove-AppxPackage -AllUsers }`,
+                removeMediaApps: `Invoke-Tweak -Name "Remove Old Media Apps" -ScriptBlock { Get-AppxPackage *ZuneMusic* -AllUsers | Remove-AppxPackage -AllUsers; Get-AppxPackage *WindowsMediaPlayer* -AllUsers | Remove-AppxPackage -AllUsers }`,
+                removeEdge: `Invoke-Tweak -Name "Force Remove Microsoft Edge" -ScriptBlock { $edgePath = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\*\\Installer"; Get-ChildItem $edgePath | ForEach-Object { Start-Process "$_\\setup.exe" -ArgumentList "--uninstall --system-level --verbose-logging --force-uninstall" -Wait } }`,
+                removePDFWriter: `Invoke-Tweak -Name "Remove Microsoft Print to PDF" -ScriptBlock { Disable-WindowsOptionalFeature -Online -FeatureName "Printing-PrintToPDFServices-Features" -NoRestart }`,
+                removeXPSWriter: `Invoke-Tweak -Name "Remove XPS Document Writer" -ScriptBlock { Disable-WindowsOptionalFeature -Online -FeatureName "Printing-XPSPrinter-Driver-Features" -NoRestart }`,
+                removeQuickAssist: `Invoke-Tweak -Name "Remove Quick Assist" -ScriptBlock { Get-AppxPackage *QuickAssist* -AllUsers | Remove-AppxPackage -AllUsers }`,
+                removeIE11: `Invoke-Tweak -Name "Remove Internet Explorer 11" -ScriptBlock { Disable-WindowsOptionalFeature -Online -FeatureName "Internet-Explorer-Optional-amd64" -NoRestart }`,
+                removeMathPanel: `Invoke-Tweak -Name "Remove Math Input Panel" -ScriptBlock { Disable-WindowsOptionalFeature -Online -FeatureName "MathRecognizer" -NoRestart }`,
+                disableTelemetry: `Invoke-Tweak -Name "Disable Core Telemetry" -ScriptBlock { sc.exe stop "DiagTrack"; sc.exe config "DiagTrack" start=disabled; sc.exe stop "dmwappushservice"; sc.exe config "dmwappushservice" start=disabled; Set-ItemProperty -Path "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection" -Name "AllowTelemetry" -Value 0 -Type DWord -Force }`,
+                disableAds: `Invoke-Tweak -Name "Disable Ads & Suggestions" -ScriptBlock { Set-ItemProperty -Path "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager" -Name "SubscribedContent-338388Enabled" -Value 0 -Type DWord -Force }`,
+                disableBing: `Invoke-Tweak -Name "Disable Bing Search" -ScriptBlock { Set-ItemProperty -Path "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Search" -Name "BingSearchEnabled" -Value 0 -Type DWord -Force }`,
+                disableCopilotRecall: `Invoke-Tweak -Name "Disable Copilot & Recall" -ScriptBlock { Set-ItemProperty -Path "HKCU:\\Software\\Policies\\Microsoft\\Windows\\WindowsCopilot" -Name "TurnOffWindowsCopilot" -Value 1 -Type DWord -Force; Set-ItemProperty -Path "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\System" -Name "DisableAIDataAnalysis" -Value 1 -Type DWord -Force }`,
+                disableActivityHistory: `Invoke-Tweak -Name "Disable Activity History" -ScriptBlock { Set-ItemProperty -Path "HKLM:\\Software\\Policies\\Microsoft\\Windows\\System" -Name "PublishUserActivities" -Value 0 -Type DWord -Force }`,
+                disableLocationTracking: `Invoke-Tweak -Name "Disable Location Tracking" -ScriptBlock { Set-ItemProperty -Path "HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\CapabilityAccessManager\\ConsentStore\\location" -Name "Value" -Value "Deny" -Type String -Force }`,
+                disableAdvertisingID: `Invoke-Tweak -Name "Disable Advertising ID" -ScriptBlock { Set-ItemProperty -Path "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\AdvertisingInfo" -Name "Enabled" -Value 0 -Type DWord -Force }`,
+                disableAppLaunchTracking: `Invoke-Tweak -Name "Disable App Launch Tracking" -ScriptBlock { Set-ItemProperty -Path "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced" -Name "Start_TrackProgs" -Value 0 -Type DWord -Force }`,
+                disableTailoredExperiences: `Invoke-Tweak -Name "Disable Tailored Experiences" -ScriptBlock { Set-ItemProperty -Path "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Privacy" -Name "TailoredExperiencesWithDiagnosticDataEnabled" -Value 0 -Type DWord -Force }`,
+                disableFeedback: `Invoke-Tweak -Name "Disable Feedback Notifications" -ScriptBlock { Set-ItemProperty -Path "HKCU:\\Software\\Microsoft\\Siuf\\Rules" -Name "NumberOfSIUFInPeriod" -Value 0 -Type DWord -Force }`,
+                ultimatePerformance: `Invoke-Tweak -Name "Enable Ultimate Performance" -ScriptBlock { powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61; powercfg /setactive e9a42b02-d5df-448d-aa00-03f14749eb61 }`,
+                disableSysMain: `Invoke-Tweak -Name "Disable SysMain" -ScriptBlock { sc.exe stop "SysMain"; sc.exe config "SysMain" start=disabled }`,
+                disableSearchIndex: `Invoke-Tweak -Name "Disable Search Indexing" -ScriptBlock { sc.exe stop "WSearch"; sc.exe config "WSearch" start=disabled }`,
+                disableFastStartup: `Invoke-Tweak -Name "Disable Fast Startup" -ScriptBlock { Set-ItemProperty -Path "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Power" -Name "HiberbootEnabled" -Value 0 -Type DWord -Force }`,
+                disableGameDVR: `Invoke-Tweak -Name "Disable Game DVR" -ScriptBlock { Set-ItemProperty -Path "HKCU:\\System\\GameConfigStore" -Name "GameDVR_Enabled" -Value 0 -Type DWord -Force }`,
+                optimizeVisualFX: `Invoke-Tweak -Name "Optimize Visual Effects" -ScriptBlock { Set-ItemProperty -Path "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\VisualEffects" -Name "VisualFXSetting" -Value 2 -Type DWord -Force }`,
+                disablePowerThrottling: `Invoke-Tweak -Name "Disable Power Throttling" -ScriptBlock { Set-ItemProperty -Path "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerThrottling" -Name "PowerThrottlingOff" -Value 1 -Type DWord -Force }`,
+                disableSpectreMeltdown: `Invoke-Tweak -Name "Disable Spectre/Meltdown Patches" -ScriptBlock { Set-ItemProperty -Path "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management" -Name "FeatureSettingsOverride" -Value 3 -Type DWord -Force; Set-ItemProperty -Path "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management" -Name "FeatureSettingsOverrideMask" -Value 3 -Type DWord -Force }`,
+                prioritizeForeground: `Invoke-Tweak -Name "Prioritize Foreground Apps" -ScriptBlock { Set-ItemProperty -Path "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\PriorityControl" -Name "Win32PrioritySeparation" -Value 38 -Type DWord -Force }`,
+                disablePrefetch: `Invoke-Tweak -Name "Disable Prefetcher" -ScriptBlock { Set-ItemProperty -Path "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management\\PrefetchParameters" -Name "EnablePrefetcher" -Value 0 -Type DWord -Force }`,
+                enableDarkMode: `Invoke-Tweak -Name "Enable Dark Mode" -ScriptBlock { Set-ItemProperty -Path "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize" -Name "AppsUseLightTheme" -Value 0 -Type DWord -Force; Set-ItemProperty -Path "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize" -Name "SystemUsesLightTheme" -Value 0 -Type DWord -Force }`,
+                classicMenu: `Invoke-Tweak -Name "Restore Classic Context Menu" -ScriptBlock { if (!(Test-Path "HKCU:\\Software\\Classes\\CLSID\\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\\InprocServer32")) { New-Item -Path "HKCU:\\Software\\Classes\\CLSID\\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\\InprocServer32" -Force } }`,
+                taskbarLeft: `Invoke-Tweak -Name "Align Taskbar Left" -ScriptBlock { Set-ItemProperty -Path "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced" -Name "TaskbarAl" -Value 0 -Type DWord -Force }`,
+                hideTaskbarIcons: `Invoke-Tweak -Name "Hide Extra Taskbar Icons" -ScriptBlock { Set-ItemProperty -Path "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced" -Name "TaskbarDa" -Value 0 -Type DWord -Force; Set-ItemProperty -Path "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced" -Name "TaskbarMn" -Value 0 -Type DWord -Force }`,
+                hideRecommended: `Invoke-Tweak -Name "Hide Recommended in Start" -ScriptBlock { Set-ItemProperty -Path "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced" -Name "Start_ShowRecommended" -Value 0 -Type DWord -Force }`,
+                disableStickyKeys: `Invoke-Tweak -Name "Disable Sticky Keys" -ScriptBlock { Set-ItemProperty -Path "HKCU:\\Control Panel\\Accessibility\\StickyKeys" -Name "Flags" -Value "506" -Type String -Force }`,
+                disableMouseAcceleration: `Invoke-Tweak -Name "Disable Mouse Acceleration" -ScriptBlock { Set-ItemProperty -Path "HKCU:\\Control Panel\\Mouse" -Name "MouseSpeed" -Value "0" -Type String -Force }`,
+                showFileExtensions: `Invoke-Tweak -Name "Show File Extensions" -ScriptBlock { Set-ItemProperty -Path "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced" -Name "HideFileExt" -Value 0 -Type DWord -Force }`,
+                showHiddenFiles: `Invoke-Tweak -Name "Show Hidden Files" -ScriptBlock { Set-ItemProperty -Path "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced" -Name "Hidden" -Value 1 -Type DWord -Force }`,
+                disableLockScreenBlur: `Invoke-Tweak -Name "Disable Lock Screen Blur" -ScriptBlock { Set-ItemProperty -Path "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\System" -Name "DisableAcrylicBackgroundOnLogon" -Value 1 -Type DWord -Force }`,
+                enableControlledFolderAccess: `Invoke-Tweak -Name "Enable Controlled Folder Access" -ScriptBlock { Set-MpPreference -EnableControlledFolderAccess Enabled }`,
+                disableSMBv1: `Invoke-Tweak -Name "Disable SMBv1" -ScriptBlock { Disable-WindowsOptionalFeature -Online -FeatureName "SMB1Protocol" -NoRestart }`,
+                disablePowerShellV2: `Invoke-Tweak -Name "Disable PowerShell v2" -ScriptBlock { Disable-WindowsOptionalFeature -Online -FeatureName "MicrosoftWindowsPowerShellV2" -NoRestart }`,
+                enableSmartScreen: `Invoke-Tweak -Name "Enable SmartScreen" -ScriptBlock { Set-ItemProperty -Path "HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer" -Name "SmartScreenEnabled" -Value "RequireAdmin" -Type String -Force }`,
+                disableAutorun: `Invoke-Tweak -Name "Disable AutoRun" -ScriptBlock { Set-ItemProperty -Path "HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer" -Name "NoDriveTypeAutoRun" -Value 255 -Type DWord -Force }`,
+                disableRemoteAssistance: `Invoke-Tweak -Name "Disable Remote Assistance" -ScriptBlock { Set-ItemProperty -Path "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Remote Assistance" -Name "fAllowToGetHelp" -Value 0 -Type DWord -Force }`,
+                enableAuditProcessCreation: `Invoke-Tweak -Name "Enable Audit Process Creation" -ScriptBlock { auditpol /set /subcategory:"Process Creation" /success:enable /failure:enable }`,
+                disableLMHash: `Invoke-Tweak -Name "Disable LanMan Hash Storage" -ScriptBlock { Set-ItemProperty -Path "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Lsa" -Name "NoLMHash" -Value 1 -Type DWord -Force }`,
+                hardenTCP_IP: `Invoke-Tweak -Name "Harden TCP/IP Stack" -ScriptBlock { Set-ItemProperty -Path "HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters" -Name "TcpMaxDataRetransmissions" -Value 5 -Type DWord -Force }`,
+                disableGuestAccount: `Invoke-Tweak -Name "Disable Guest Account" -ScriptBlock { net user guest /active:no }`,
+                flushDNS: `Invoke-Tweak -Name "Flush DNS Cache" -ScriptBlock { ipconfig /flushdns }`,
+                resetTCP_IP: `Invoke-Tweak -Name "Reset TCP/IP Stack" -ScriptBlock { netsh int ip reset }`,
+                disableNetBIOS: `Invoke-Tweak -Name "Disable NetBIOS" -ScriptBlock { $regkey = "HKLM:\\SYSTEM\\CurrentControlSet\\Services\\NetBT\\Parameters\\Interfaces"; Get-ChildItem $regkey | ForEach-Object { Set-ItemProperty -Path "$regkey\\$($_.PSChildName)" -Name "NetbiosOptions" -Value 2 -Type DWord -Force } }`,
+                disableLLMNR: `Invoke-Tweak -Name "Disable LLMNR" -ScriptBlock { Set-ItemProperty -Path "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows NT\\DNSClient" -Name "EnableMulticast" -Value 0 -Type DWord -Force }`,
+                disableNetworkDiscovery: `Invoke-Tweak -Name "Disable Network Discovery" -ScriptBlock { netsh advfirewall firewall set rule group="Network Discovery" new enable=No }`,
+                setGoogleDNS: `Invoke-Tweak -Name "Set Google DNS" -ScriptBlock { Set-DnsClientServerAddress -InterfaceAlias (Get-NetAdapter | Where-Object {$_.Status -eq "Up"}).Name -ServerAddresses ("8.8.8.8", "8.8.4.4") }`,
+                setCloudflareDNS: `Invoke-Tweak -Name "Set Cloudflare DNS" -ScriptBlock { Set-DnsClientServerAddress -InterfaceAlias (Get-NetAdapter | Where-Object {$_.Status -eq "Up"}).Name -ServerAddresses ("1.1.1.1", "1.0.0.1") }`,
+                disableIPv6: `Invoke-Tweak -Name "Disable IPv6" -ScriptBlock { Set-ItemProperty -Path "HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip6\\Parameters" -Name "DisabledComponents" -Value 0xffffffff -Type DWord -Force }`,
+                optimizeNetwork: `Invoke-Tweak -Name "Apply Network Optimizations" -ScriptBlock { netsh int tcp set global autotuninglevel=disabled }`,
+                showWifiPassword: `Invoke-Tweak -Name "Show Current WiFi Password" -ScriptBlock { (netsh wlan show profiles) | Select-String "\\:(.+)$" | ForEach-Object { $n = $_.Matches.Groups[1].Value.Trim(); (netsh wlan show profile name="$n" key=clear) } }`,
+                installWSL: `Invoke-Tweak -Name "Install WSL" -ScriptBlock { wsl --install }`,
+                enableHyperV: `Invoke-Tweak -Name "Enable Hyper-V" -ScriptBlock { Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All -NoRestart }`,
+                enableSandbox: `Invoke-Tweak -Name "Enable Windows Sandbox" -ScriptBlock { Enable-WindowsOptionalFeature -Online -FeatureName "Containers-DisposableClientVM" -NoRestart }`,
+                enableDeveloperMode: `Invoke-Tweak -Name "Enable Developer Mode" -ScriptBlock { Set-ItemProperty -Path "HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\AppModelUnlock" -Name "AllowAllTrustedApps" -Value 1 -Type DWord -Force }`,
+                addTakeOwnership: `Invoke-Tweak -Name "Add 'Take Ownership' Context Menu" -ScriptBlock { $regPath = "HKCR:\\*\\shell\\runas"; New-Item $regPath -Force; Set-ItemProperty -Path $regPath -Name "(Default)" -Value "Take Ownership"; Set-ItemProperty -Path $regPath -Name "NoWorkingDirectory" -Value "" }`,
+                addPowerShellHere: `Invoke-Tweak -Name "Add 'PowerShell Here' Context Menu" -ScriptBlock { Set-ItemProperty -Path "HKCR:\\Directory\\shell\\powershell\\command" -Name "(Default)" -Value "powershell.exe -NoExit -Command Set-Location -LiteralPath '%L'" }`,
+                disableUAC: `Invoke-Tweak -Name "Disable UAC" -ScriptBlock { Set-ItemProperty -Path "HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System" -Name "EnableLUA" -Value 0 -Type DWord -Force }`,
+                showGodMode: `Invoke-Tweak -Name "Create 'God Mode' on Desktop" -ScriptBlock { New-Item -Path "$env:USERPROFILE\\Desktop\\GodMode.{ED7BA470-8E54-465E-825C-99712043E01C}" -ItemType Directory }`,
+                installChocolatey: `Invoke-Tweak -Name "Install Chocolatey" -ScriptBlock { Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1')) }`,
+                updateWinget: `Invoke-Tweak -Name "Update Winget" -ScriptBlock { winget upgrade winget }`,
+                disablePrintSpooler: `Invoke-Tweak -Name "Disable Print Spooler" -ScriptBlock { sc.exe stop "Spooler"; sc.exe config "Spooler" start=disabled }`,
+                disableFaxService: `Invoke-Tweak -Name "Disable Fax Service" -ScriptBlock { sc.exe stop "Fax"; sc.exe config "Fax" start=disabled }`,
+                disableRemoteRegistry: `Invoke-Tweak -Name "Disable Remote Registry" -ScriptBlock { sc.exe stop "RemoteRegistry"; sc.exe config "RemoteRegistry" start=disabled }`,
+                disableTouchKeyboardSvc: `Invoke-Tweak -Name "Disable Touch Keyboard Service" -ScriptBlock { sc.exe stop "TabletInputService"; sc.exe config "TabletInputService" start=disabled }`,
+                disableBluetoothSvc: `Invoke-Tweak -Name "Disable Bluetooth Service" -ScriptBlock { sc.exe stop "BthServ"; sc.exe config "BthServ" start=disabled }`,
+                disableAllJoynRouterSvc: `Invoke-Tweak -Name "Disable AllJoyn Router Service" -ScriptBlock { sc.exe stop "AJRouter"; sc.exe config "AJRouter" start=disabled }`,
+                disableGeolocationSvc: `Invoke-Tweak -Name "Disable Geolocation Service" -ScriptBlock { sc.exe stop "lfsvc"; sc.exe config "lfsvc" start=disabled }`,
+                disableWalletSvc: `Invoke-Tweak -Name "Disable WalletService" -ScriptBlock { sc.exe stop "WalletService"; sc.exe config "WalletService" start=disabled }`,
+                disablePhoneSvc: `Invoke-Tweak -Name "Disable Phone Service" -ScriptBlock { sc.exe stop "PhoneSvc"; sc.exe config "PhoneSvc" start=disabled }`,
+                disableDiagnosticPolicySvc: `Invoke-Tweak -Name "Disable Diagnostic Policy Service" -ScriptBlock { sc.exe stop "DPS"; sc.exe config "DPS" start=disabled }`,
+                clearTempFiles: `Invoke-Tweak -Name "Clear Temp Files" -ScriptBlock { Remove-Item "$env:TEMP\\*" -Recurse -Force -ErrorAction SilentlyContinue; Remove-Item "C:\\Windows\\Temp\\*" -Recurse -Force -ErrorAction SilentlyContinue }`,
+                clearRecycleBin: `Invoke-Tweak -Name "Empty Recycle Bin" -ScriptBlock { Clear-RecycleBin -Force -ErrorAction SilentlyContinue }`,
+                clearSoftwareDistribution: `Invoke-Tweak -Name "Clear Windows Update Cache" -ScriptBlock { net stop wuauserv; Remove-Item "C:\\Windows\\SoftwareDistribution" -Recurse -Force; net start wuauserv }`,
+                runDiskCleanup: `Invoke-Tweak -Name "Run Full Disk Cleanup" -ScriptBlock { $drive = $env:SystemDrive; cleanmgr /sagerun:1 }`,
+                resetStoreCache: `Invoke-Tweak -Name "Reset Microsoft Store Cache" -ScriptBlock { wsreset.exe -q }`,
+                runSFC: `Invoke-Tweak -Name "Run System File Checker" -ScriptBlock { sfc /scannow }`,
+                runDISMHealth: `Invoke-Tweak -Name "Run DISM Component Store Repair" -ScriptBlock { Dism.exe /Online /Cleanup-Image /RestoreHealth }`,
+                clearIconCache: `Invoke-Tweak -Name "Rebuild Icon Cache" -ScriptBlock { ie4uinit.exe -show; Stop-Process -Name explorer -Force; $iconCache = "$env:LOCALAPPDATA\\IconCache.db"; if (Test-Path $iconCache) { Remove-Item $iconCache -Force }; Start-Process explorer }`,
+                clearFontCache: `Invoke-Tweak -Name "Rebuild Font Cache" -ScriptBlock { Stop-Service FontCache; $fontCache = "$env:WINDIR\\ServiceProfiles\\LocalService\\AppData\\Local\\FontCache"; if (Test-Path $fontCache) { Remove-Item "$fontCache\\*" -Recurse -Force }; Start-Service FontCache }`,
+                defragmentAllDrives: `Invoke-Tweak -Name "Defragment & Optimize All Drives" -ScriptBlock { Optimize-Volume -DriveLetter (Get-Volume).DriveLetter -Defrag -Verbose }`,
+            };
+            let finalScript = `<#
+.SYNOPSIS
+    Exovate - Custom Windows 11 Optimization Script
+.DESCRIPTION
+    This script was dynamically generated by the Exovate web interface.
+    It applies user-selected tweaks to debloat and optimize Windows 11.
+    Run this script in an elevated PowerShell terminal (as Administrator).
+.NOTES
+    Generated on: ${new Date().toString()}
+#>
+Clear-Host
+${asciiArt}
+function Write-Log { param([string]$Message, [System.ConsoleColor]$Color = 'Gray') Write-Host $Message -ForegroundColor $Color }
+function Invoke-Tweak { param([string]$Name, [scriptblock]$ScriptBlock) try { Write-Log -Message "🚀 Applying Tweak: $Name..." -Color 'Cyan'; Invoke-Command -ScriptBlock $ScriptBlock; Write-Log -Message "✅ Success: $Name applied." -Color 'Green' } catch { Write-Log -Message "❌ Error applying '$Name': $_.Exception.Message" -Color 'Red' }; Write-Host "" }
+if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) { Write-Log "❌ Admin rights required." -Color 'Red'; Read-Host "Press Enter to exit..."; return }
+Write-Log "✅ Admin rights confirmed." -Color 'Green'; Write-Host ""
+`;
+            Object.keys(commands).forEach(id => { if (getOption(id)) { finalScript += commands[id] + '\n'; } });
+            finalScript += `Write-Log "✅ All selected tweaks have been applied." -Color 'Green'\nWrite-Log "It is recommended to reboot your computer for all changes to take full effect." -Color 'Yellow'\nRead-Host "Press Enter to exit..."`;
+            document.getElementById('generatedScript').textContent = finalScript;
+            document.getElementById('copyButton').disabled = false;
+            document.getElementById('downloadButton').disabled = false;
+        }
+    </script>
+</body>
+</html>
