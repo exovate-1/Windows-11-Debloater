@@ -1,39 +1,25 @@
-# ✨ Windows 11 GUI/CLI Debloater
+# 🧼 Windows 11 Debloater & Optimizer
 
-> A beautiful, powerful post-install optimization tool for Windows 11 systems. Strip the bloat, boost performance, and harden privacy all in one click.
-
----
-
-## 🚀 Features at a Glance
-
-🖥️ **Dual Interfaces** – Use the elegant GUI or fast CLI  
-🛠️ **100+ Tweaks** – Organized into clear, focused categories  
-⚡ **One-Click Presets** – Safe, Gaming, Lightweight & Max Performance  
-🗑️ **Debloat Everything** – Remove UWP apps & unneeded system features  
-🔒 **Privacy Hardening** – Disable tracking, telemetry & ads  
-🚀 **Performance Boost** – Game mode, unlock hidden power plans  
-🎨 **UI Customizer** – Classic context menu, dark mode, centered taskbar  
-⛑️ **Safe by Design** – Creates restore point before changes  
+A powerful, open-source script to declutter and optimize Windows 11 post-installation. It removes preinstalled bloatware, disables unnecessary features, boosts performance, and tightens privacy – all with a single click.
 
 ---
 
-## 📁 Included Tweaks
+## ✨ Features at a Glance
 
-- 🧼 **App Removal**: Xbox, Cortana, Skype, Bing, News, Weather, etc.  
-- 🧩 **Feature Cleanup**: IE, Speech, OCR, Media Player, Quick Assist  
-- 🧠 **AI Recall Blocker**: Disable Win11's AI snapshot system  
-- 🔐 **Security Settings**: Turn off Copilot, tracking, and suggestions  
-- 🧠 **Memory Tweaks**: Disable Superfetch, Indexing, Prefetch  
-- 🕹️ **Game Boost**: Kill GameBar, enable Ultimate Performance  
-- 🌙 **Power Plan**: Sets high-performance scheme and disables hibernation  
+- 🧹 **Bloatware Removal** – UWP apps, Xbox, Cortana, Feedback Hub, and more.
+- 🔒 **Privacy Hardening** – Disable telemetry, tracking, and online ads.
+- 🚀 **Performance Tweaks** – Disable SysMain, Superfetch, indexing, GameDVR, and more.
+- 🎛️ **Power Optimization** – Activates High Performance mode.
+- 🎨 **UI Tweaks** – Start menu cleanup, taskbar alignment, disable recommendations.
+- 🔌 **Recall & Copilot Disabled** – Say goodbye to background AI bloat.
 
 ---
 
-## 🛠️ Usage
+## ⚡ How to Use
 
-### 🧪 CLI (PowerShell)
+### 🖱️ GUI Method (Recommended)
 
-```powershell
-Run as Administrator:
+1. Visit the website and **download the generated file**.
+2. **Right-click the file** and choose `Run with PowerShell`.
+3. Wait until all tweaks are applied – reboot when done!
 
-powershell -ExecutionPolicy Bypass -File .\tiny11-debloater.ps1
